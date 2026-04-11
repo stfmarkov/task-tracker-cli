@@ -10,17 +10,17 @@ import "fmt"
 // task-cli mark-in-progress 1
 // task-cli mark-done 1
 
-func updateTask() error {
+func updateTask(id string) error {
 	fmt.Println("Updating task...")
 	return nil
 }
 
-func markTaskInProgress() error {
+func markTaskInProgress(id string) error {
 	fmt.Println("Marking task as in progress...")
 	return nil
 }
 
-func markTaskDone() error {
+func markTaskDone(id string) error {
 	fmt.Println("Marking task as done...")
 	return nil
 }

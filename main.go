@@ -7,6 +7,13 @@ import (
 
 type Command string
 
+func checkNumberOfArgs(args []string, expected int) error {
+	if len(args) != expected {
+		return fmt.Errorf("expected %d arguments, got %d", expected, len(args))
+	}
+	return nil
+}
+
 func main() {
 
 	const (
@@ -18,19 +25,48 @@ func main() {
 		CommandList Command = "list"
 	)
 
-	commands := map[Command]func() error{
-		CommandAdd: addTask,
-		CommandUpdate: updateTask,
-		CommandDelete: deleteTask,
-		CommandMarkInProgress: markTaskInProgress,
-		CommandMarkDone: markTaskDone,
-		CommandList: listTasks,
-	}
-
 	if len(os.Args) < 2 {
 		fmt.Fprintln(os.Stderr, "Usage: task-tracker <command>")
 		os.Exit(1)
 	}
+
+	args := os.Args[2:]
+
+	commands := map[Command]func() error{
+		CommandAdd: func() error {
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return err
+			}
+			return addTask(args[0])
+		},
+		CommandUpdate: func() error {
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return err
+			}
+			return updateTask(args[0])
+		},
+		CommandDelete: func() error {
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return err
+			}
+			return deleteTask(args[0])
+		},
+		CommandMarkInProgress: func() error {
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return err
+			}
+			return markTaskInProgress(args[0])
+		},
+		CommandMarkDone: func() error {
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return err
+			}
+			return markTaskDone(args[0])
+		},
+		CommandList: listTasks,
+	}
+
+
 	
 	command := Command(os.Args[1])
 

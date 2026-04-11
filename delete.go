@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func deleteTask() error {
+func deleteTask(id string) error {
 	fmt.Println("Deleting task...")
 	return nil
 }
