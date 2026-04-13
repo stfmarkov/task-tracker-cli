@@ -65,8 +65,11 @@ func main() {
 			return markTaskDone(args[0])
 		},
 		CommandList: func() error {
-			if err := checkNumberOfArgs(args, 1); err != nil {
+			if len(args) == 0 {
 				return listTasks("")
+			}
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return err
 			}
 			return listTasks(TaskStatus(args[0]))
 		},

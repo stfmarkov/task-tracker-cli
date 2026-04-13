@@ -30,10 +30,6 @@ type TaskUpdate struct {
 	Status *TaskStatus
 }
 
-type TaskList struct {
-	Tasks []Task
-}
-
 func (t *Task) save() error {
 	tasks, err := loadTasks()
 	if err != nil {

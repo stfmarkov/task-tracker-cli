@@ -15,7 +15,11 @@ import (
 
 func listTasks(filterByStatus TaskStatus) error {
 
-	fmt.Println("Listing tasks...", filterByStatus)
+	isExistingStatus := filterByStatus == "" || filterByStatus == TaskStatusTodo || filterByStatus == TaskStatusInProgress || filterByStatus == TaskStatusDone
+
+	if !isExistingStatus {
+		return fmt.Errorf("invalid status %s, expected one of: todo, in-progress, done", filterByStatus)
+	}
 
 	tasks, err := loadTasks()
 

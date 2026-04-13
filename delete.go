@@ -18,7 +18,7 @@ func deleteTask(id string) error {
 
 	taskID, err := strconv.Atoi(id)
 	if err != nil {
-		return err
+		return fmt.Errorf("invalid task ID %s: %w", id, err)
 	}
 
 	for i, task := range tasks {
