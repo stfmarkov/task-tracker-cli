@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -21,6 +23,15 @@ type Task struct {
 	Status TaskStatus `json:"status"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type TaskUpdate struct {
+	Description *string
+	Status *TaskStatus
+}
+
+type TaskList struct {
+	Tasks []Task
 }
 
 func (t *Task) save() error {
@@ -73,5 +84,53 @@ func saveTasks(tasks []Task) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func findTaskAndUpdate(id string, values TaskUpdate) error {
+
+	isEmpty := values == (TaskUpdate{})
+
+	if isEmpty {
+		return errors.New("no values to update")
+	}
+
+	tasks, err := loadTasks()
+
+	if err != nil {
+		return err
+	}
+
+	taskID, err := strconv.Atoi(id)
+	if err != nil {
+		return fmt.Errorf("invalid task ID %s: %w", id, err)
+	}
+
+	taskFound := false
+
+	for i, task := range tasks {
+		if task.ID == taskID {
+			if values.Description != nil {
+				tasks[i].Description = *values.Description
+				tasks[i].UpdatedAt = time.Now()
+			}
+			if values.Status != nil {
+				tasks[i].Status = *values.Status
+				tasks[i].UpdatedAt = time.Now()
+			}
+			taskFound = true
+			break
+		}
+	}
+
+	if !taskFound {
+		return errors.New("task not found")
+	}
+
+	err = saveTasks(tasks)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

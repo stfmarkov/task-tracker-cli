@@ -3,8 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"strconv"
-	"time"
 )
 
 // # Updating and deleting tasks
@@ -20,33 +18,10 @@ func updateTask(id string, description string) error {
 		return errors.New("description is required")
 	}
 
-	tasks, err := loadTasks()
+	err := findTaskAndUpdate(id, TaskUpdate{
+		Description: &description,
+	})
 
-	if err != nil {
-		return err
-	}
-
-	taskID, err := strconv.Atoi(id)
-	if err != nil {
-		return err
-	}
-
-	taskFound := false
-
-	for i, task := range tasks {
-		if task.ID == taskID {
-			tasks[i].Description = description
-			tasks[i].UpdatedAt = time.Now()
-			taskFound = true
-			break
-		}
-	}
-
-	if !taskFound {
-		return errors.New("task not found")
-	}
-
-	err = saveTasks(tasks)
 	if err != nil {
 		return err
 	}
@@ -57,11 +32,34 @@ func updateTask(id string, description string) error {
 }
 
 func markTaskInProgress(id string) error {
-	fmt.Println("Marking task as in progress...")
+
+	taskStatus := TaskStatusInProgress
+	
+	err := findTaskAndUpdate(id, TaskUpdate{
+		Status: &taskStatus,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Task marked as in progress successfully")
+	
 	return nil
 }
 
 func markTaskDone(id string) error {
-	fmt.Println("Marking task as done...")
+
+	taskStatus := TaskStatusDone
+
+	err := findTaskAndUpdate(id, TaskUpdate{
+		Status: &taskStatus,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Task marked as done successfully")
 	return nil
 }
