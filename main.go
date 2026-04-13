@@ -26,7 +26,7 @@ func main() {
 	)
 
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "Usage: task-tracker <command>")
+		fmt.Fprintln(os.Stderr, "Wrong number of arguments")
 		os.Exit(1)
 	}
 
@@ -40,10 +40,10 @@ func main() {
 			return addTask(args[0])
 		},
 		CommandUpdate: func() error {
-			if err := checkNumberOfArgs(args, 1); err != nil {
+			if err := checkNumberOfArgs(args, 2); err != nil {
 				return err
 			}
-			return updateTask(args[0])
+			return updateTask(args[0], args[1])
 		},
 		CommandDelete: func() error {
 			if err := checkNumberOfArgs(args, 1); err != nil {

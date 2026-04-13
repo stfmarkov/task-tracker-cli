@@ -65,6 +65,7 @@ func loadTasks() ([]Task, error) {
 
 func saveTasks(tasks []Task) error {
 	jsonData, err := json.MarshalIndent(tasks, "", "  ")
+
 	if err != nil {
 		return err
 	}
