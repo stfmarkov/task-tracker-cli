@@ -51,6 +51,8 @@ func updateTask(id string, description string) error {
 		return err
 	}
 
+	fmt.Println("Task updated successfully")
+
 	return nil
 }
 
