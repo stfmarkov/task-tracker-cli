@@ -23,6 +23,7 @@ func main() {
 		CommandMarkInProgress Command = "mark-in-progress"
 		CommandMarkDone Command = "mark-done"
 		CommandList Command = "list"
+		CommandHelp Command = "help"
 	)
 
 	if len(os.Args) < 2 {
@@ -63,7 +64,26 @@ func main() {
 			}
 			return markTaskDone(args[0])
 		},
-		CommandList: listTasks,
+		CommandList: func() error {
+			if err := checkNumberOfArgs(args, 1); err != nil {
+				return listTasks("")
+			}
+			return listTasks(TaskStatus(args[0]))
+		},
+		CommandHelp: func() error {
+			fmt.Println("Available commands:")
+			fmt.Println("--------------------------------")
+			fmt.Println("add <description> - Add a new task")
+			fmt.Println("update <id> <description> - Update a task")
+			fmt.Println("delete <id> - Delete a task")
+			fmt.Println("mark-in-progress <id> - Mark a task as in progress")
+			fmt.Println("mark-done <id> - Mark a task as done")
+			fmt.Println("list - List all tasks")
+			fmt.Println("list <status> - List tasks by status")
+			fmt.Println("help - Show this help message")
+			fmt.Println("--------------------------------")
+			return nil
+		},
 	}
 
 
